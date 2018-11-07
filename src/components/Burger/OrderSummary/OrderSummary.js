@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Button from '../../UI/Button/Button';
+
 const orderSummary = (props) => {
     const ingredientSummary = Object.keys(props.ingredients)
         .map(igKey => {
@@ -12,9 +14,10 @@ const orderSummary = (props) => {
             <ul>
                 {ingredientSummary}
             </ul>
+            <p><strong>Total Price: {props.total.toFixed(2)}</strong></p>
             <p>Continue to checkout?</p>
-            <button>CANCEL</button>
-            <button>CONTINUE</button>
+            <Button bntType="Danger" clicked={props.cancel}>CANCEL</Button>
+            <Button bntType="Success" clicked={props.continue}>CONTINUE</Button>
         </>
     )
 };
