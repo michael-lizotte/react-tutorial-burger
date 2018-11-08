@@ -2,7 +2,7 @@ import React from 'react';
 
 import Button from '../../UI/Button/Button';
 
-const orderSummary = (props) => {
+const OrderSummary = (props) => {
     const ingredientSummary = Object.keys(props.ingredients)
         .map(igKey => {
             return <li key={igKey}><span style={{textTransform: 'capitalize'}}>{igKey}: {props.ingredients[igKey]}</span></li>
@@ -22,4 +22,4 @@ const orderSummary = (props) => {
     )
 };
 
-export default orderSummary;
+export default OrderSummary;
