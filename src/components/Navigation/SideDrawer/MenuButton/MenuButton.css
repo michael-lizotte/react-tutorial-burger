@@ -9,3 +9,9 @@
 .MenuButton img {
     height: 100%;
 }
+
+@media (min-width: 499px) {
+    .MenuButton {
+        display: none;
+    }
+}
