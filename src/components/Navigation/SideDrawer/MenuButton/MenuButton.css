@@ -1,0 +1,11 @@
+.MenuButton {
+    background-color: transparent;
+    border: none;
+    outline: pointer;
+    cursor: pointer;
+    height: 100%;
+}
+
+.MenuButton img {
+    height: 100%;
+}

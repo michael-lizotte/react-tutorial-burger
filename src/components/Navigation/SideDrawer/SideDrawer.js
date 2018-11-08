@@ -4,15 +4,24 @@ import './SideDrawer.css';
 
 import Logo from '../../Logo/Logo';
 import NavigationItems from '../NavigationItems/NavigationItems';
+import Backdrop from '../../UI/Backdrop/Backdrop';
 
 const sideDrawer = (props) => {
+    let classes = ["SideDrawer", "Close"];
+    if(props.show) {
+        classes.pop();
+        classes.push("Open");
+    }
     return (
-        <div className="SideDrawer">
-            <Logo className="Logo"/>
-            <nav>
-                <NavigationItems />
-            </nav>
-        </div>
+        <>
+            <Backdrop show={props.show} clicked={props.clicked}/>
+            <div className={classes.join(' ')}>
+                <Logo className="Logo"/>
+                <nav>
+                    <NavigationItems />
+                </nav>
+            </div>
+        </>
     );
 };
 
