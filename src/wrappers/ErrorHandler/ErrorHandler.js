@@ -30,11 +30,11 @@ const errorHandler = ( WrappedComponent, axios ) => {
          *  Because of that, we are using componentWillMount instead
          */
         componentWillMount() {
-            axios.interceptors.request.use(req => {
+            this.reqInterceptor = axios.interceptors.request.use(req => {
                 this.setState({error: null});
                 return req;
             })
-            axios.interceptors.response.use(res => res, err => {
+            this.resInterceptor = axios.interceptors.response.use(res => res, err => {
                 this.setState({error: err})
             });
         }
@@ -53,7 +53,12 @@ const errorHandler = ( WrappedComponent, axios ) => {
                     <WrappedComponent {...this.props} />
                 </>
             );
-        }        
+        }
+
+        componentWillUnmount() {
+            axios.interceptors.request.eject(this.reqInterceptor);
+            axios.interceptors.response.eject(this.resInterceptor);            
+        }
     }
 };
 
