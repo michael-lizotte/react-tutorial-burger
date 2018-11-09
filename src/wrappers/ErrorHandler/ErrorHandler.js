@@ -16,7 +16,20 @@ const errorHandler = ( WrappedComponent, axios ) => {
             error: null
         }
 
-        componentDidMount() {
+        /**
+         * Since the child components use internet requests in their componentDidMount,
+         * the componentDidMount of ErrorHandler will be called AFTER his child's.
+         * 
+         * (reminder -> lifecycle hook:
+         *  1.constructor
+         *  2.componentWillMount
+         *  3.render
+         *  4.render child component <---
+         *  5.componentDidMount)
+         * 
+         *  Because of that, we are using componentWillMount instead
+         */
+        componentWillMount() {
             axios.interceptors.request.use(req => {
                 this.setState({error: null});
                 return req;
