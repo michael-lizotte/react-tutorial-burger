@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import axios from '../../../axios-order';
 
 import Button from '../../../components/UI/Button/Button';
@@ -22,7 +23,7 @@ class contactData extends Component {
         
         this.setState({loading:true});
         const order = {
-            ingredients: this.state.ingredients,
+            ingredients: this.props.ingredients,
             price: this.props.price,
             customer: {
                 name: 'Michael',
@@ -40,6 +41,7 @@ class contactData extends Component {
                 loading:false,
                 purchasing: false
             });
+            this.props.history.push('/');
         });
     }
 
@@ -69,4 +71,4 @@ class contactData extends Component {
     }
 }
 
-export default contactData
+export default withRouter(contactData)
