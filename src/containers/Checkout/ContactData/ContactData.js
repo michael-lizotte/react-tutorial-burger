@@ -4,6 +4,7 @@ import axios from '../../../axios-order';
 import Button from '../../../components/UI/Button/Button';
 
 import './ContactData.css';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 class contactData extends Component {
     state = {
@@ -43,8 +44,8 @@ class contactData extends Component {
     }
 
     render() {
-        return (
-            <div className="ContactData">
+        let form = (
+            <>
                 <h4>Enter your contact data</h4>
                 <form>
                     <input className="Input" type="text" name="name" placeholder="Your name"/>
@@ -55,6 +56,14 @@ class contactData extends Component {
                         bntType="Success"
                         clicked={this.orderHandler}>ORDER</Button>
                 </form>
+            </>
+        );
+        if(this.state.loading) {
+            form = <Spinner />
+        }
+        return (
+            <div className="ContactData">
+                {form}
             </div>
         );
     }
