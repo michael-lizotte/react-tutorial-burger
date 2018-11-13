@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import axios from '../../../axios-order';
 
 import Button from '../../../components/UI/Button/Button';
+
+import './ContactData.css';
 
 class contactData extends Component {
     state = {
@@ -9,20 +12,48 @@ class contactData extends Component {
         address: {
             street: '',
             postalCode: ''
+        },
+        loading: false,
+    }
+
+    orderHandler = (event) => {
+        event.preventDefault();
+        
+        this.setState({loading:true});
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.props.price,
+            customer: {
+                name: 'Michael',
+                address: {
+                    street: 'Teststreet 1',
+                    zipCode: '43212',
+                    country: 'canada'
+                },
+                email: 'test@test.com'
+            },
+            deliveryMethod: 'fast'
         }
+        axios.post('/orders.json', order).then(res => {
+            this.setState({
+                loading:false,
+                purchasing: false
+            });
+        });
     }
 
     render() {
         return (
-            <div>
+            <div className="ContactData">
                 <h4>Enter your contact data</h4>
                 <form>
-                    <input type="text" name="name" placeholder="Your name"/>
-                    <input type="email" name="email" placeholder="Your email"/>
-                    <input type="text" name="street" placeholder="Your street"/>
-                    <input type="text" name="postal" placeholder="Your postal code"/>
+                    <input className="Input" type="text" name="name" placeholder="Your name"/>
+                    <input className="Input" type="email" name="email" placeholder="Your email"/>
+                    <input className="Input" type="text" name="street" placeholder="Your street"/>
+                    <input className="Input" type="text" name="postal" placeholder="Your postal code"/>
                     <Button 
-                        bntType="Success">ORDER</Button>
+                        bntType="Success"
+                        clicked={this.orderHandler}>ORDER</Button>
                 </form>
             </div>
         );
