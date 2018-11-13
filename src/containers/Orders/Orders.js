@@ -6,15 +6,19 @@ import ErrorHandler from '../../wrappers/ErrorHandler/ErrorHandler';
 
 class Orders extends Component {
     state = {
-        order: [],
+        orders: [],
         loading: true
     }
 
     render() {
         return (
             <div>
-                <Order />
-                <Order />
+                {this.state.orders.map(order => {
+                    return <Order 
+                                key={order.id} 
+                                ingredients={order.ingredients}
+                                price={order.price}/>
+                })}
             </div>
         );
     }
@@ -22,7 +26,7 @@ class Orders extends Component {
     componentDidMount() {
         axios.get('/orders.json').then((res) => {
             const fetchedOrders = [];
-            for (let key in res) {
+            for (let key in res.data) {
                 fetchedOrders.push({
                     ...res.data[key],
                     id: key
