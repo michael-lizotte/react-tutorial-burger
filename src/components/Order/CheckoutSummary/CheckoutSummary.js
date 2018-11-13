@@ -8,16 +8,16 @@ import './CheckoutSummary.css';
 const checkoutSummary = (props) => {
     return (
         <div className="CheckoutSummary">
-            <h1>We hope it tastes well!</h1>
+            <h1>We hope it tastes good!</h1>
             <div style={{width: '300px', margin: 'auto'}}>
                 <Burger ingredients={props.ingredients}/>
             </div>
             <Button 
                 bntType='Danger'
-                clicked>CANCEL</Button>
+                clicked={props.onCheckoutCancel}>CANCEL</Button>
             <Button 
                 bntType='Success'
-                clicked>SUCCESS</Button>
+                clicked={props.onCheckoutContinue}>SUCCESS</Button>
         </div>
     );
 }
