@@ -17,10 +17,15 @@
     font: inherit;
     padding: 6px 10px;
     display: block;
-    width: 100%;
+    width: 95%;
 }
 
 .InputElement:focus {
     outline: noen;
     background-color: #ccc;
+}
+
+.Invalid {
+    border: 1px solid red;
+    background-color: #FDA49A;
 }
