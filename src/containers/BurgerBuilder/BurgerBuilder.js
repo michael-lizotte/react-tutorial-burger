@@ -26,44 +26,20 @@ class BurgerBuilder extends Component {
         error: false
     }
 
-    addIngredientHandler = (type) => {
-        const updatedIngredients = {
-            ...this.state.ingredients
-        }
-        updatedIngredients[type] = this.state.ingredients[type] + 1
-
-        const price = this.state.totalPrice + INGREDIENT_PRICES[type]
-        
-        this.setState({
-            ingredients: updatedIngredients,
-            totalPrice: price,
-            purchasable: true
-        });
-    }
-
-    removeIngredientHandler = (type) => {
-        const updatedIngredients = {
-            ...this.state.ingredients
-        }
-
-        updatedIngredients[type] = this.state.ingredients[type] - 1
-        
-        const price = this.state.totalPrice - INGREDIENT_PRICES[type]
+    checkPurchasable = (type) => {
         let purchasable = false;
-
-        for (let obj in updatedIngredients) {
-            if (updatedIngredients[obj] > 0) {
+        for (let obj in this.props.ings) {
+            if (this.props.ings[obj] > 0) {
                 purchasable = true;
                 break;
             }
         }
         
-
-        this.setState({
-            ingredients: updatedIngredients,
-            totalPrice: price,
-            purchasable: purchasable
-        });
+        if (purchasable != this.state.purchasable) {
+            this.setState({
+                purchasable: purchasable
+            });
+        }
     }
 
     onModalClosedHandler = () => {
@@ -73,18 +49,18 @@ class BurgerBuilder extends Component {
     }
 
     onModalContinueHandler = () => {
-        const queryParams = [];
+        // const queryParams = [];
 
-        for (let i in this.state.ingredients) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-        }
-        queryParams.push('price=' + this.props.price);
+        // for (let i in this.state.ingredients) {
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        // }
+        // queryParams.push('price=' + this.props.price);
 
-        const queryString = queryParams.join('&');
+        // const queryString = queryParams.join('&');
 
         this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
+            pathname: '/checkout'
+            // search: '?' + queryString
         });
     }
 
@@ -112,6 +88,7 @@ class BurgerBuilder extends Component {
         let burger = this.state.error? <p>Ingredients couldn't be loaded!! :( &lt;/3"</p> : <Spinner />
 
         if (this.props.ings !== null) {
+            this.checkPurchasable();
             burger = (
                 <>
                     <Burger ingredients={this.props.ings} purchasable={this.purchasableHandler}/>
@@ -162,8 +139,12 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
     return {
-        onAdd: (_igKey) => dispatch({type: actions.ADD_INGREDIENT, igKey: _igKey}),
-        onRemove: (_igKey) => dispatch({type: actions.REMOVE_INGREDIENT, igKey: _igKey})
+        onAdd: (_igKey) => {
+            dispatch({type: actions.ADD_INGREDIENT, igKey: _igKey})
+        },
+        onRemove: (_igKey) => {
+            dispatch({type: actions.REMOVE_INGREDIENT, igKey: _igKey})
+        }
     };
 }
 
