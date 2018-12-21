@@ -39,6 +39,11 @@ const reducer = (state = init, action) => {
                 error: true
             }
         case actions.SET_INGREDIENT:
+            let price = init.totalPrice;
+            for (let ings in action.ingredients) {
+                if (action.ingredients[ings] !== 0)
+                    price = price + INGREDIENT_PRICES[ings]
+            }
             return {
                 ...state,
                 ingredients: {
@@ -46,7 +51,8 @@ const reducer = (state = init, action) => {
                     salad: action.ingredients.salad,
                     cheese: action.ingredients.cheese,
                     meat: action.ingredients.meat
-                }
+                },
+                totalPrice: price
             }
         default:
             return state;
