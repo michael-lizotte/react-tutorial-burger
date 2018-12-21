@@ -17,3 +17,10 @@ export {
     fetchOrderSuccess,
     fetchOrders
 } from './order';
+
+export {
+    auth,
+    authFailed,
+    authStart,
+    authSuccess
+} from './auth'
