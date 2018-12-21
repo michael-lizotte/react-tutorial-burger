@@ -140,10 +140,10 @@ const mapState = state => {
 const mapDispatch = dispatch => {
     return {
         onAdd: (_igKey) => {
-            dispatch({type: actions.ADD_INGREDIENT, igKey: _igKey})
+            dispatch(actions.addIngredient(_igKey))
         },
         onRemove: (_igKey) => {
-            dispatch({type: actions.REMOVE_INGREDIENT, igKey: _igKey})
+            dispatch(actions.removeIngredient(_igKey))
         }
     };
 }
