@@ -1,4 +1,5 @@
 import * as actions from '../actions/actions';
+import { updateObject } from '../utility';
 
 const init = {
     orders: [],
@@ -9,12 +10,11 @@ const init = {
 const reducer = (state = init, action) => {
     switch(action.type){
         case actions.PURCHASE_SUCCESS:
-            return {
-                ...state,
+            return updateObject(state, {
                 loading: false,
                 purchased: true,
                 orders: state.orders.concat({...action.orderData, id:action.orderId})
-            };
+            });
         case actions.PURCHASE_FAILED:   
             return {
                 ...state,
