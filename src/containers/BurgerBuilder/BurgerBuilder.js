@@ -21,9 +21,7 @@ const INGREDIENT_PRICES = {
 class BurgerBuilder extends Component {
     state = {
         purchasable: false,
-        purchasing: false,
-        loading: false,
-        error: false
+        purchasing: false
     }
 
     checkPurchasable = (type) => {
@@ -85,7 +83,7 @@ class BurgerBuilder extends Component {
         }
 
         let orderSummary = null;
-        let burger = this.state.error? <p>Ingredients couldn't be loaded!! :( &lt;/3"</p> : <Spinner />
+        let burger = this.props.error? <p>Ingredients couldn't be loaded!! :( &lt;/3"</p> : <Spinner />
 
         if (this.props.ings !== null) {
             this.checkPurchasable();
@@ -122,29 +120,23 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount () {
-        // axios.get('https://react-tutorial-burger.firebaseio.com/ingredients.json').then(res => {
-        //     this.setState({ingredients: res.data})
-        // }).catch(error => {
-        //     this.setState({error: true});
-        // })
+        this.props.onInit();
     }
 }
 
 const mapState = state => {
     return {
         ings: state.ingredients,
-        price: state.totalPrice
+        price: state.totalPrice,
+        error: state.error
     };
 }
 
 const mapDispatch = dispatch => {
     return {
-        onAdd: (_igKey) => {
-            dispatch(actions.addIngredient(_igKey))
-        },
-        onRemove: (_igKey) => {
-            dispatch(actions.removeIngredient(_igKey))
-        }
+        onAdd: (_igKey) => dispatch(actions.addIngredient(_igKey)),
+        onRemove: (_igKey) => dispatch(actions.removeIngredient(_igKey)),
+        onInit: () => dispatch(actions.initIngredients())
     };
 }
 
