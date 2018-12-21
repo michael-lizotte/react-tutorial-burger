@@ -136,7 +136,8 @@ const mapDispatch = dispatch => {
     return {
         onAdd: (_igKey) => dispatch(actions.addIngredient(_igKey)),
         onRemove: (_igKey) => dispatch(actions.removeIngredient(_igKey)),
-        onInit: () => dispatch(actions.initIngredients())
+        onInit: () => dispatch(actions.initIngredients()),
+        onInitPurchase: () => dispatch(actions.purchaseInit())
     };
 }
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from './ContactData/ContactData';
+import * as actions from '../../store/actions';
 
 class Checkout extends Component {
 
@@ -13,23 +14,6 @@ class Checkout extends Component {
 
     onCheckoutContinue = () => {
         this.props.history.replace('/checkout/contact-data');
-    }
-    
-    render() {
-        let summary = <Redirect to="/"/>
-        if (this.props.ings !== null) {
-            summary = (
-                <div>
-                    <CheckoutSummary 
-                        ingredients={this.props.ings} 
-                        onCheckoutCancel={this.onCheckoutCancel}
-                        onCheckoutContinue={this.onCheckoutContinue}/>
-                    <Route path={this.props.match.url + '/contact-data'} 
-                        component={ContactData} />
-                </div>
-            )
-        }
-        return summary;
     }
 
     componentWillMount() {
@@ -47,11 +31,35 @@ class Checkout extends Component {
 
         // this.setState({ingredients: ingredients, price: price})
     }
+    
+    render() {
+        let summary = <Redirect to="/"/>
+        if (this.props.ings !== null) {
+            const purchasedRedirect = this.props.purchased ? <Redirect to="/" /> : null;
+            summary = (
+                <div>
+                    {purchasedRedirect}
+                    <CheckoutSummary 
+                        ingredients={this.props.ings} 
+                        onCheckoutCancel={this.onCheckoutCancel}
+                        onCheckoutContinue={this.onCheckoutContinue}/>
+                    <Route path={this.props.match.url + '/contact-data'} 
+                        component={ContactData} />
+                </div>
+            )
+        }
+        return summary;
+    }
+
+    componentDidMount() {
+
+    }
 }
 
 const mapState = state => {
     return {
-        ings: state.burgerBuilder.ingredients
+        ings: state.burgerBuilder.ingredients,
+        purchased: state.order.purchased
     }
 }
 
