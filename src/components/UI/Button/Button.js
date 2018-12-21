@@ -5,8 +5,7 @@ import './Button.css';
 const button = (props) => {
     let classes = [];
     classes.push("Button");
-
-    classes.push(props.bntType);
+    classes.push(props.btnType);
 
     return <button
         className={classes.join(' ')}
