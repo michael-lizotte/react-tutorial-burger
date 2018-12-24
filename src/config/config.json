@@ -1,0 +1,14 @@
+{
+    "development": {
+        "database" : {
+            "firebase_url": "https://react-tutorial-burger.firebaseio.com",
+            "firebase_login_api_url": "https://www.googleapis.com/identitytoolkit/v3/relyingparty"
+        }
+    },
+    "test": {
+
+    },
+    "production": {
+
+    }
+}

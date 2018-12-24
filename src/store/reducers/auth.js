@@ -12,7 +12,6 @@ const reducer = (state = init, action) => {
     switch (action.type) {
         case actions.AUTH_START : return updateObject(state, { error : null, loading : true});
         case actions.AUTH_SUCCESS : 
-            console.log(action);
             return updateObject(state, {
                 token : action.authData.idToken,
                 userId : action.authData.localId,

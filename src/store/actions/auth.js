@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import * as actions from './actions';
+import { config_db } from '../../config/config';
 
 export const authStart = () => {
     return {
@@ -30,7 +31,7 @@ export const auth = (email, password, isSignup) => {
             password: password,
             returnSecureToken: true
         }
-        const key = 'AIzaSyDJNCYbQEPFmYe3vayl33K0MtvOVadb1no';
+        const key = config_db['firebase_api_key']
         const url = isSignup ? 'signupNewUser' : 'verifyPassword';
         axios.post(
             `https://www.googleapis.com/identitytoolkit/v3/relyingparty/${url}?key=${key}`, authData)
