@@ -23,6 +23,11 @@ const reducer = (state = init, action) => {
                 error : action.error,
                 loading : false
             });
+        case actions.AUTH_LOGOUT :
+            return updateObject(state, {
+                token : null,
+                userID : null
+            });
         default : return state;
     }
 }

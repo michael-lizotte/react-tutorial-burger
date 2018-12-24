@@ -23,6 +23,20 @@ export const authFailed = (error) => {
     }
 }
 
+export const checkTimeout = (expirationTime) => {
+    return dispatch => {
+        setTimeout(() => {
+            dispatch(logout());
+        }, expirationTime * 1000)
+    }
+}
+
+export const logout = () => {
+    return {
+        type: actions.AUTH_LOGOUT
+    }
+}
+
 export const auth = (email, password, isSignup) => {
     return dispatch => {
         dispatch(authStart());
@@ -37,8 +51,9 @@ export const auth = (email, password, isSignup) => {
             `https://www.googleapis.com/identitytoolkit/v3/relyingparty/${url}?key=${key}`, authData)
             .then(res => {
                 dispatch(authSuccess(res.data));
+                dispatch(checkTimeout(res.data.expiresIn));
             }).catch(err => {
-                dispatch(authFailed(err));
+                dispatch(authFailed(err.response.data.error));
             });
     }
 }

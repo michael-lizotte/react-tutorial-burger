@@ -35,7 +35,8 @@ class Auth extends Component {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 8
+                    minLength: 8,
+                    sameAs: ''
                 },
                 valid: false,
                 touched: false,
@@ -71,6 +72,8 @@ class Auth extends Component {
                 touched: true
             }
         }
+        if (inputId === 'password' && this.state.controls.passwordRetype.value !== '')
+            form.password.validation.sameAs = this.state.controls.passwordRetype.value
         if (inputId === 'passwordRetype')
             form.passwordRetype.validation.sameAs = this.state.controls.password.value
 
@@ -136,7 +139,7 @@ class Auth extends Component {
                     passwordRetype : {
                         ...this.state.controls.passwordRetype,
                         valid : true,
-                        disabled : !prevState.disabled
+                        disabled : !prevState.controls.passwordRetype.disabled
                     }
                 },
                 isSignup: !prevState.isSignup
@@ -182,8 +185,17 @@ class Auth extends Component {
             display = <Spinner />
         }
 
+        let errorMessage = null;
+
+        if (this.props.error) {
+            errorMessage = (
+                <p>{this.props.error.message}</p>
+            )
+        }
+
         return (
             <div className="Auth">
+                {errorMessage}
                 {display}
             </div>
         );
@@ -192,7 +204,8 @@ class Auth extends Component {
 
 const mapState = state => {
     return {
-        loading : state.auth.loading
+        loading : state.auth.loading,
+        error : state.auth.error
     }
 }
 
