@@ -11,7 +11,7 @@ const toolbar = (props) => (
         <MenuButton clicked={props.clicked}/>
         <Logo className="Logo"/>
         <nav className="DesktopOnly">
-            <NavigationItems/>
+            <NavigationItems isAuth={props.isAuth}/>
         </nav>
     </header>
 );
