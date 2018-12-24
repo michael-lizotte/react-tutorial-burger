@@ -8,6 +8,7 @@ import Input from '../../../components/UI/Input/Input';
 import './ContactData.css';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import ErrorHandler from '../../../wrappers/ErrorHandler/ErrorHandler';
+import { validate } from '../../../utils/utils';
 
 import * as actions from '../../../store/actions';
 
@@ -99,24 +100,6 @@ class contactData extends Component {
         formIsValid: false
     }
 
-    isValid = (value, rules) => {
-        let isValid = true;
-
-        if(!rules) {
-            return true;
-        }
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.email) {
-            isValid = (/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(String(value).toLowerCase())) && isValid
-        }
-
-        return isValid;
-    }
-
     onInputChange = (event, inputId) => {
         const form = {
             ...this.state.orderForm
@@ -124,7 +107,7 @@ class contactData extends Component {
 
         const formElement = {...form[inputId]}
         formElement.value = event.target.value;
-        formElement.valid = this.isValid(formElement.value, formElement.validation)
+        formElement.valid = validate(formElement.value, formElement.validation)
         formElement.touched = true;
         form[inputId] = formElement;
 
