@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
@@ -54,13 +55,13 @@ class Auth extends Component {
                     minLength: 8,
                     sameAs: ''
                 },
-                valid: false,
+                valid: true,
                 touched: false,
-                disabled: false
+                disabled: true
             }
         },
         valid: false,
-        isSignup: true
+        isSignup: false
     }
 
     onInputChange = (event, inputId) => {
@@ -138,11 +139,14 @@ class Auth extends Component {
                     ...this.state.controls,
                     passwordRetype : {
                         ...this.state.controls.passwordRetype,
-                        valid : true,
                         disabled : !prevState.controls.passwordRetype.disabled
                     }
                 },
-                isSignup: !prevState.isSignup
+                isSignup: !prevState.isSignup,
+                valid: this.isValid(
+                    this.state.controls.passwordRetype.value, 
+                    this.state.controls.passwordRetype.validation,
+                    !this.state.controls.passwordRetype.disabled)
             }
         })
     }
@@ -177,7 +181,7 @@ class Auth extends Component {
                 </form>
                 <Button
                     btnType='Danger'
-                    clicked={this.switchAuthModeHandler}>SWITCH TO {!this.state.isSignup ? 'SIGNUP' : 'SIGNIN'}</Button>
+                    clicked={this.switchAuthModeHandler}>{this.state.isSignup ? 'Login' : 'Signup'}</Button>
             </>
         );
 
@@ -193,8 +197,18 @@ class Auth extends Component {
             )
         }
 
+        let redirect = null;
+        if (this.props.isAuth) {
+            /**
+             * Could also store the path in the store's state
+             * (more dynamic)
+             */
+            redirect = this.props.buildingBurger ? <Redirect to="/checkout" /> : <Redirect to="/" />
+        }
+
         return (
             <div className="Auth">
+                {redirect}
                 {errorMessage}
                 {display}
             </div>
@@ -205,7 +219,9 @@ class Auth extends Component {
 const mapState = state => {
     return {
         loading : state.auth.loading,
-        error : state.auth.error
+        error : state.auth.error,
+        isAuth: state.auth.token != null,
+        buildingBurger: state.burgerBuilder.buildingBurger
     }
 }
 
