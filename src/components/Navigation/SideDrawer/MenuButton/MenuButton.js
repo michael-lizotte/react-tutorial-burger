@@ -5,7 +5,7 @@ import Icon from '../../../../assets/images/menu-icon.png';
 
 const menu = (props) => (
     <div className="MenuButton">
-        <img src={Icon} onClick={props.clicked} />
+        <img src={Icon} onClick={props.clicked} alt="Burger Builder"/>
     </div>
 );
 

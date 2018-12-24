@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import * as actions from '../../store/actions';
 
 import './Auth.css';
@@ -22,7 +23,8 @@ class Auth extends Component {
                     email: true
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                disasbled: false
             },
             password: {
                 elementType: 'input',
@@ -36,29 +38,60 @@ class Auth extends Component {
                     minLength: 8
                 },
                 valid: false,
-                touched: false
+                touched: false,
+                disabled: false
+            },
+            passwordRetype: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'password',
+                    placeholder: 'Password confirmation',
+                },
+                value: '',
+                validation: {
+                    required: true,
+                    minLength: 8,
+                    sameAs: ''
+                },
+                valid: false,
+                touched: false,
+                disabled: false
             }
-        }
+        },
+        valid: false,
+        isSignup: true
     }
 
     onInputChange = (event, inputId) => {
-        const form = {
+        let form = {
             ...this.state.controls,
             [inputId]: {
                 ...this.state.controls[inputId],
                 value: event.target.value,
-                valid: this.isValid(event.target.value, this.state.controls[inputId].validation),
                 touched: true
             }
         }
+        if (inputId === 'passwordRetype')
+            form.passwordRetype.validation.sameAs = this.state.controls.password.value
 
-        this.setState({controls: form})
+        form[inputId].valid = this.isValid(event.target.value, form[inputId].validation, form[inputId].disabled);
+
+        let isValid = true;
+        for(let obj in form) {
+            isValid = form[obj].valid && isValid
+        }
+
+        this.setState({
+            ...this.state,
+            controls: form, 
+            valid: isValid
+        })
     }
 
-    isValid = (value, rules) => {
+    isValid = (value, rules, disabled) => {
         let isValid = true;
 
-        if(!rules) {
+        if(!rules || disabled) {
             return true;
         }
 
@@ -82,12 +115,33 @@ class Auth extends Component {
             isValid = (/^\d+$/).test(value) && isValid;
         }
 
+        if (rules.sameAs) {
+            isValid = (value === rules.sameAs) && isValid;
+        }
+
         return isValid;
     }
 
     onSubmitHandler = event => {
         event.preventDefault();
-        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignup);
+    }
+
+    switchAuthModeHandler = () => {
+        this.setState(prevState => {
+            return {
+                ...this.state,
+                controls: {
+                    ...this.state.controls,
+                    passwordRetype : {
+                        ...this.state.controls.passwordRetype,
+                        valid : true,
+                        disabled : !prevState.disabled
+                    }
+                },
+                isSignup: !prevState.isSignup
+            }
+        })
     }
 
     render() {
@@ -100,31 +154,52 @@ class Auth extends Component {
         }
 
         const form = formElArray.map(formEl => {
-            return <Input
+            return !formEl.config.disabled? <Input
                 key={formEl.id}
                 elementType={formEl.config.elementType} 
                 elementConfig={formEl.config.elementConfig}
                 value={formEl.config.value}
                 invalid={!formEl.config.valid}
                 touched={formEl.config.touched}
-                changed={(event) => this.onInputChange(event, formEl.id)}/>
+                changed={(event) => this.onInputChange(event, formEl.id)}/> : null
         })
+
+        let display = (
+            <>
+                <form onSubmit={this.onSubmitHandler}>
+                    {form}
+                    <Button 
+                        btnType='Success'
+                        disabled={!this.state.valid}>SUBMIT</Button>
+                </form>
+                <Button
+                    btnType='Danger'
+                    clicked={this.switchAuthModeHandler}>SWITCH TO {!this.state.isSignup ? 'SIGNUP' : 'SIGNIN'}</Button>
+            </>
+        );
+
+        if (this.props.loading) {
+            display = <Spinner />
+        }
 
         return (
             <div className="Auth">
-                <form onSubmit={this.onSubmitHandler}>
-                    {form}
-                    <Button btnType='Success'>SUBMIT</Button>
-                </form>
+                {display}
             </div>
         );
     }
 }
 
-const mapDispatch = dispatch => {
+const mapState = state => {
     return {
-        onAuth: (email, password) => dispatch(actions.auth(email, password))
+        loading : state.auth.loading
     }
 }
 
-export default connect(null, mapDispatch)(Auth);
+const mapDispatch = dispatch => {
+    return {
+        onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup))
+    }
+}
+
+export default connect(mapState, mapDispatch)(Auth);

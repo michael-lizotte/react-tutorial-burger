@@ -11,13 +11,6 @@ import axios from '../../axios-order';
 
 import * as actions from '../../store/actions';
 
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.7,
-    meat: 1.5,
-    bacon: 1.0
-}
-
 class BurgerBuilder extends Component {
     state = {
         purchasable: false,
@@ -33,7 +26,7 @@ class BurgerBuilder extends Component {
             }
         }
         
-        if (purchasable != this.state.purchasable) {
+        if (purchasable !== this.state.purchasable) {
             this.setState({
                 purchasable: purchasable
             });
